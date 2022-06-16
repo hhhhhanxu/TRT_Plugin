@@ -6,7 +6,9 @@
 
 ## 输入输出
 支持FP32和FP16 \
-支持动态尺寸推理 
+支持动态尺寸推理 \
+<img width="986" alt="截屏2022-06-16 14 57 04" src="https://user-images.githubusercontent.com/71363087/174010710-6cdeabab-85de-4e0d-92b7-7d62330fc1ce.png">
+
 ## 注意事项
 编译时注意Makefile显卡运算能力SM的设置，对于Nvidia-A10，运算能力为8.0，SM=80 \
 具体的显卡算力列表见：\
