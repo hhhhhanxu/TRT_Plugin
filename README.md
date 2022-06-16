@@ -1,5 +1,6 @@
-# TRT_Plugin
+# TRT Plugin
 Some CUDA code and relevant TensorRT Plugin,Implement by myself \
+Detailed descriptions of each plugin can be found in the folder
 ## envirment
 cuda 11.6
 TensorRT 8.4.1.4
