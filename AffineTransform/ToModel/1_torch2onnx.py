@@ -47,8 +47,8 @@ outputs = graph.outputs
 
 new_node = gs.Node(op='AffineTrans',name='AffineTrans-1',\
     attrs=OrderedDict([
-        ['k',2.0],
-        ['b',1.0]
+        ['k',37.0],
+        ['b',66.0]
     ]))
 
 new_node.inputs = inputs

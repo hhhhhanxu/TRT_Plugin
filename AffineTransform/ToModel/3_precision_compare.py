@@ -14,8 +14,8 @@ from collections import OrderedDict
 import cv2
 
 
-plan_file = "affine.plan"
-plugin_path = "./"
+plan_file = "affine_surgeon.plan"
+plugin_path = "./AffineTransform/"
 soFileList = glob(plugin_path + "*.so")
 
 logger = trt.Logger(trt.Logger.ERROR)
