@@ -94,10 +94,10 @@ namespace nvinfer1{
         for(int i=0; i<inputDesc[0].dims.nbDims;i++){
             nElement *= inputDesc[0].dims.d[i];
         }//计算输入Tensor尺寸？
-        dim3 block_size(CEIL_DIVIDE(nElement,256),1,1);
-        dim3 thread_size(256,1,1);
+        dim3 block_size(CEIL_DIVIDE(nElement,64),1,1);
+        dim3 thread_size(64,1,1);
         if(inputDesc[0].type == DataType::kFLOAT){
-            printf("FP32 kernel!\n");
+            // printf("FP32 kernel!\n");
             (AffineTransKernel<float>)<<<block_size,thread_size,0,stream>>>(reinterpret_cast<const float *>(inputs[0]),reinterpret_cast<float *>(outputs[0]),m_.k,m_.b,nElement);
         }
         else if(inputDesc[0].type == DataType::kHALF){
@@ -168,9 +168,16 @@ namespace nvinfer1{
     std::vector<PluginField> AffineTransPluginCreator::attr_;
 
     AffineTransPluginCreator::AffineTransPluginCreator() {
+        //
+        attr_.clear();
+        attr_.emplace_back(PluginField("k",nullptr,PluginFieldType::kFLOAT32,1));
+        attr_.emplace_back(PluginField("b",nullptr,PluginFieldType::kFLOAT32,1));
+        //
         WHERE_AM_I()
         fc_.nbFields = attr_.size();
         fc_.fields   = attr_.data();
+        printf("nbFields %d \n",fc_.nbFields);
+
     }
 
     AffineTransPluginCreator::~AffineTransPluginCreator() noexcept {
@@ -181,7 +188,7 @@ namespace nvinfer1{
     IPluginV2 *AffineTransPluginCreator::createPlugin(const char *name, const PluginFieldCollection *fc) noexcept {
         WHERE_AM_I()
         float k = 888.0;
-        float b = 999.0;  //这个作为默认的参数？
+        float b = 999.0;  //这个作为默认的参数？ 
         std::map<std::string,float *> parameterMap{
                 {"k",&k},
                 {"b",&b}
