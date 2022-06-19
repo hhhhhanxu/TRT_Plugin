@@ -48,8 +48,8 @@ outputs = graph.outputs
 # 实际上，attr只要是个字典应该就可以
 new_node = gs.Node(op='AffineTrans',name='AffineTrans_1',
                     attrs=OrderedDict(
-                        k=np.array([15.0],dtype=np.float32),
-                        b=np.array([22.0],dtype=np.float32),
+                        k=np.array([88.0],dtype=np.float32),
+                        b=np.array([2.0],dtype=np.float32),
                         plugin_version = "1",
                         plugin_namespace = ""
                     )) # 现在的问题是plugin中找不到attr，可能是没有正确载入
