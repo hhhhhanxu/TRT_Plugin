@@ -1,0 +1,11 @@
+trtexec \
+    --onnx=./affine_surgeon.onnx \
+    --minShapes=input:1x256x256 \
+    --optShapes=input:4x256x256 \
+    --maxShapes=input:16x256x256 \
+    --workspace=1024 \
+    --saveEngine=model-FP32.plan \
+    --shapes=input:4x256x256 \
+    --plugins=./AffineTransform/AffineTrans.so \
+    --verbose \
+    > result-FP32.txt
