@@ -21,7 +21,7 @@ def onnx2trt():
     print(f"trtFile: {trtFile}")
     
     # 获取plugin列表
-    PluginPath   = "../"
+    PluginPath   = "./AffineTransform/"
     soFileList = glob(PluginPath + "*.so")
     print(soFileList)
     # 加载plugin
@@ -29,12 +29,13 @@ def onnx2trt():
     trt.init_libnvinfer_plugins(logger, '')
     for soFile in soFileList:
         ctypes.cdll.LoadLibrary(soFile)  # 基于ctypes库
-
+    print('------------------------------------------')
     builder = trt.Builder(logger)
     EXPLICIT_BATCH = 1 << (int)(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
     network = builder.create_network(EXPLICIT_BATCH)
     parser = trt.OnnxParser(network, logger)
     parser.parse_from_file(onnxFile)  #
+
     config = builder.create_builder_config()
     config.max_workspace_size = 12 << 30  # 12G
 
@@ -55,8 +56,8 @@ def onnx2trt():
     # for i in range(network.num_layers):
     #     layer = network.get_layer(i)
     #     print("layer:",layer.name)
-    #     if(layer.name == "AffineTrans-1"):
-    #         print(layer.getattribute)
+    #     if(layer.name == "AffineTrans_1"):
+    #         print(layer.getattribute())
     engineString = builder.build_serialized_network(network, config)
 
     try:

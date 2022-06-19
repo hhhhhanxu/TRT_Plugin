@@ -1,4 +1,3 @@
-from re import X
 import torch
 import torch.nn as nn
 import onnx
@@ -16,6 +15,7 @@ class AffineModel(nn.Module):
     def forward(self,x:torch.Tensor)->torch.Tensor:
 
         return self.k*x+self.b
+
 #测试模型效果
 model = AffineModel(15,8).cuda()
 x = np.ones((1,256,256))
@@ -45,11 +45,15 @@ graph = gs.import_onnx(onnx_model)
 inputs = graph.inputs
 outputs = graph.outputs
 
-new_node = gs.Node(op='AffineTrans',name='AffineTrans_1',\
-    attrs=OrderedDict([
-        ["k",33.0],
-        ["b",66.0]
-    ]))
+# 实际上，attr只要是个字典应该就可以
+new_node = gs.Node(op='AffineTrans',name='AffineTrans_1',
+                    attrs=OrderedDict(
+                        k=np.array([15.0],dtype=np.float32),
+                        b=np.array([22.0],dtype=np.float32),
+                        plugin_version = "1",
+                        plugin_namespace = ""
+                    )) # 现在的问题是plugin中找不到attr，可能是没有正确载入
+
 
 new_node.inputs = inputs
 new_node.outputs = outputs
