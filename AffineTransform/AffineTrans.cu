@@ -1,5 +1,6 @@
 #include "AffineTrans.cuh"
 
+
 //实现仿射变换对kernel
 template<typename T>
 __global__ void AffineTransKernel(const T * input, T * output ,const T k,const T b,const int nElement){
@@ -9,7 +10,7 @@ __global__ void AffineTransKernel(const T * input, T * output ,const T k,const T
         return ;
 
     T _1 = input[index];
-    T _2 = k * _1 +b;
+    T _2 = k * _1 + b;
 
     output[index] = _2;
 }
@@ -100,7 +101,7 @@ namespace nvinfer1{
             (AffineTransKernel<float>)<<<block_size,thread_size,0,stream>>>(reinterpret_cast<const float *>(inputs[0]),reinterpret_cast<float *>(outputs[0]),m_.k,m_.b,nElement);
         }
         else if(inputDesc[0].type == DataType::kHALF){
-            printf("FP16 kernel!\n");
+            // printf("FP16 kernel!\n");
             //由于k和b初始化都是默认float的，所以需要转一下half
             (AffineTransKernel<__half>)<<<block_size,thread_size,0,stream>>>(reinterpret_cast<const __half *>(inputs[0]),reinterpret_cast<__half *>(outputs[0]),__half(m_.k),__half(m_.b),nElement);
         }
@@ -179,26 +180,30 @@ namespace nvinfer1{
     //Creator里最重要的两个函数，分别用于“接受参数创建 Plugin” 和 “去序列化创建 Plugin”
     IPluginV2 *AffineTransPluginCreator::createPlugin(const char *name, const PluginFieldCollection *fc) noexcept {
         WHERE_AM_I()
-        float k = 2;
-        float b = 1;  //这个作为默认的参数？
+        float k = 888.0;
+        float b = 999.0;  //这个作为默认的参数？
         std::map<std::string,float *> parameterMap{
                 {"k",&k},
                 {"b",&b}
         };
         for (int i = 0; i < fc->nbFields; ++i)
         {
+            printf("Now key is %s \n",fc->fields[i].name);
             if (parameterMap.find(fc->fields[i].name) != parameterMap.end())
             {
-                *parameterMap[fc->fields[i].name] = *reinterpret_cast<const float *>(fc->fields[i].data);
+                printf("find para %s and it's data is %f \n" , fc->fields[i].name , *(float *)fc->fields[i].data);
+                *parameterMap[fc->fields[i].name] = *(float *)fc->fields[i].data;
             }
         }
-
-        return new AffineTransPlugin(name,k,b);
+        printf("final paramete is k:%f,b:%f \n",*parameterMap["k"],*parameterMap["b"]);
+        return new AffineTransPlugin(name,*parameterMap["k"],*parameterMap["b"]);
+        // return new AffineTransPlugin(name,k,b);
     }
 
     IPluginV2 *AffineTransPluginCreator::deserializePlugin(const char *name, const void *serialData,
                                                           size_t serialLength) noexcept {
         WHERE_AM_I()
+        printf("deserializePlugin and the data is %f ,%f \n",*(float *)(serialData),*((float *)(serialData)+1));
         return new AffineTransPlugin(name,serialData,serialLength);
     }
 

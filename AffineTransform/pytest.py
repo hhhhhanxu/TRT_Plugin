@@ -20,7 +20,7 @@ import numpy as np
 from cuda import cudart
 import tensorrt as trt
 
-soFile = "./AffineTrans.so"
+soFile = "./AffineTransform/AffineTrans.so"
 epsilon = 1.0e-6
 np.random.seed(97)
 
@@ -70,10 +70,10 @@ def run(shape, k, b):
         network = builder.create_network(1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
         profile = builder.create_optimization_profile()
         config = builder.create_builder_config()
-        builder.fp16_mode = True
+        # builder.fp16_mode = True
         config.max_workspace_size = 6 << 30  
 
-        inputT0 = network.add_input('inputT0', trt.DataType.HALF, [-1 for i in shape])
+        inputT0 = network.add_input('inputT0', trt.DataType.FLOAT, [-1 for i in shape])
         if len(shape) == 1:
             profile.set_shape(inputT0.name, [1], [32], [512])
         else:
@@ -103,7 +103,7 @@ def run(shape, k, b):
     #            engine.get_binding_dtype(i),engine.get_binding_shape(i),context.get_binding_shape(i),engine.get_binding_name(i))
 
     bufferH = []
-    bufferH.append(np.arange(np.prod(shape), dtype=np.float16).reshape(shape))
+    bufferH.append(np.arange(np.prod(shape), dtype=np.float32).reshape(shape))
     for i in range(nOutput):
         bufferH.append(np.empty(context.get_binding_shape(nInput + i), dtype=trt.nptype(engine.get_binding_dtype(nInput + i))))
     bufferD = []
@@ -127,19 +127,18 @@ def run(shape, k, b):
     for i in range(nOutput):
         printArrayInfo(bufferH[nInput+i])
     '''
-    print("Test", testCase, check(bufferH[nInput], outputCPU[0], True))
+    print("Test", testCase, check(bufferH[nInput], outputCPU[0], False))
 
     cudart.cudaStreamDestroy(stream)
     for buffer in bufferD:
         cudart.cudaFree(buffer)
-    print("Test", testCase, "finish!")
+    # print("Test", testCase, "finish!")
 
 if __name__ == '__main__':
     os.system('rm ./*.plan')
     np.set_printoptions(precision=3, linewidth=100, suppress=True)
-    run([512], 2,1)
-    run([32,32], 2,1)
-    run([16,16,16],2, 1)
-    run([8,8,8,8], 2,1)
+    run([512], 15,10)
+    # run([32,32], 2,1)
+    # run([16,16,16],2, 1)
+    # run([8,8,8,8], 2,1)
 
-    print("test finish!")
