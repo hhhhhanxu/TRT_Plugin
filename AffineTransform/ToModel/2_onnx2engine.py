@@ -52,11 +52,11 @@ def onnx2trt():
     # config.set_flag(trt.BuilderFlag.FP16)
     # config.set_flag(trt.BuilderFlag.OBEY_PRECISION_CONSTRAINTS)
     # config.clear_flag(trt.BuilderFlag.TF32)
-    for i in range(network.num_layers):
-        layer = network.get_layer(i)
-        print("layer:",layer.name)
-        if(layer.name == "AffineTrans-1"):
-            print(layer.getattribute)
+    # for i in range(network.num_layers):
+    #     layer = network.get_layer(i)
+    #     print("layer:",layer.name)
+    #     if(layer.name == "AffineTrans-1"):
+    #         print(layer.getattribute)
     engineString = builder.build_serialized_network(network, config)
 
     try:

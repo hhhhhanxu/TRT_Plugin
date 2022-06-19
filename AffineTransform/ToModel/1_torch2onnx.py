@@ -17,11 +17,11 @@ class AffineModel(nn.Module):
 
         return self.k*x+self.b
 #测试模型效果
-model = AffineModel(2,1).cuda()
+model = AffineModel(15,8).cuda()
 x = np.ones((1,256,256))
 x = torch.from_numpy(x).cuda()
 y = model(x)
-print(y)
+# print(y)
 # 操作可行，导出onnx
 x = torch.randn((1,256,256),requires_grad=False).cuda()
 onnx_file = 'affine.onnx'
@@ -45,10 +45,10 @@ graph = gs.import_onnx(onnx_model)
 inputs = graph.inputs
 outputs = graph.outputs
 
-new_node = gs.Node(op='AffineTrans',name='AffineTrans-1',\
+new_node = gs.Node(op='AffineTrans',name='AffineTrans_1',\
     attrs=OrderedDict([
-        ['k',37.0],
-        ['b',66.0]
+        ["k",33.0],
+        ["b",66.0]
     ]))
 
 new_node.inputs = inputs

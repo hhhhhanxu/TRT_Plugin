@@ -16,7 +16,7 @@ import cv2
 
 plan_file = "affine_surgeon.plan"
 plugin_path = "./AffineTransform/"
-soFileList = glob(plugin_path + "*.so")
+soFileList = glob(plugin_path + "*.so")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
 logger = trt.Logger(trt.Logger.ERROR)
 trt.init_libnvinfer_plugins(logger, '')
@@ -44,7 +44,7 @@ nInput = np.sum([ engine.binding_is_input(i) for i in range(engine.num_bindings)
 nOutput = engine.num_bindings - nInput
 context = engine.create_execution_context()
 #-------------------------------------------------------------------------------
-test_data = np.zeros((1,256,256),dtype=np.float32)
+test_data = np.ones((1,256,256),dtype=np.float32)
 
 context.set_binding_shape(0, test_data.shape)
 
