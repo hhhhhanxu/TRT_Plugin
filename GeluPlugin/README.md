@@ -1,9 +1,9 @@
 # Gelu 激活函数
 ## intro
 在NLP和语言任务中较为常用，当前有许多Transformer也在使用这个激活函数，PyTorch的实现为torch.nn.Relu() \
-![截屏2022-06-21 20 22 19](https://user-images.githubusercontent.com/71363087/174797916-dcfbe9bc-cd85-4340-aae1-f377d122bcbf.png)
+![截屏2022-06-21 20 22 19](https://user-images.githubusercontent.com/71363087/174797916-dcfbe9bc-cd85-4340-aae1-f377d122bcbf.png) \
 具体的公式为：\
-![截屏2022-06-21 20 30 48](https://user-images.githubusercontent.com/71363087/174799458-b4ae9620-f500-4962-8dfa-0d5c0763e75a.png)
+![截屏2022-06-21 20 30 48](https://user-images.githubusercontent.com/71363087/174799458-b4ae9620-f500-4962-8dfa-0d5c0763e75a.png) \
 将高斯分布展开，得到最终的计算公式为：\
 ![截屏2022-06-21 20 31 37](https://user-images.githubusercontent.com/71363087/174799615-2a7deccd-bef4-4f9a-8b03-30ee9a629fb4.png)
 ## 输入输出
